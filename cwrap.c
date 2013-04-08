@@ -141,7 +141,7 @@ static int answer_to_connection(void *cls, struct MHD_Connection *connection, co
 
 
     if (strcmp(method, "GET") == 0) {
-        if(strcmp(url,"/status/") == 0) {
+        if ((strcmp(url,"/status/") == 0) || (strcmp(url,"/status"))) {
             char * output;
             output = malloc(MAXOUTPUTSIZE);
             int ret = statusreport(output);
