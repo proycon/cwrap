@@ -34,6 +34,16 @@ const char *errorpage =
   "{ error: 1 }";
 
 
+int statusreport(char * output) {
+	//REPLACE THIS FUNCTION WITH YOUR OWN! RETURNING A NON-ZERO CODE IN CASE OF SUCCESS	
+  int ret;
+
+  strcpy(output,"Status ok, I think");
+   
+  return(ret); 
+}
+
+
 
 int process(const char * input, char * output) {
 	//REPLACE THIS FUNCTION WITH YOUR OWN! RETURNING A NON-ZERO CODE IN CASE OF SUCCESS	
@@ -129,19 +139,28 @@ static int answer_to_connection(void *cls, struct MHD_Connection *connection, co
       return MHD_YES;
   }
 
-  if (strcmp(method, "GET") == 0) {
-      return send_page(connection, askpage, MHD_HTTP_OK);
-  } else if (strcmp(method, "POST") == 0) {
-      struct connection_info_struct *con_info = *con_cls;
-      if (*upload_data_size != 0) {
-          MHD_post_process(con_info->postprocessor, upload_data, *upload_data_size);
-          *upload_data_size = 0;
-          return MHD_YES;
-        } else if (con_info->outputstring != NULL) {
-          return send_page (connection, con_info->outputstring, MHD_HTTP_OK);
+
+    if (strcmp(method, "GET") == 0) {
+        if(strcmp(url,"/status/") == 0) {
+            char * output;
+            output = malloc(MAXOUTPUTSIZE);
+            int ret = statusreport(output);
+            return send_page(connection, output, MHD_HTTP_OK);
+        } else {
+            return send_page(connection, askpage, MHD_HTTP_OK);
         }
-  }
-  return send_page(connection, errorpage, MHD_HTTP_BAD_REQUEST);
+    } else if (strcmp(method,"POST") == 0) {
+        struct connection_info_struct *con_info = *con_cls;
+        if (*upload_data_size != 0) {
+            MHD_post_process(con_info->postprocessor, upload_data, *upload_data_size);
+            *upload_data_size = 0;
+            return MHD_YES;
+        } else if (con_info->outputstring != NULL) {          
+            return send_page (connection, con_info->outputstring, MHD_HTTP_OK);
+        }
+
+    }
+    return send_page(connection, errorpage, MHD_HTTP_BAD_REQUEST);
 }
 
 
