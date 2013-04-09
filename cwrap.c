@@ -21,12 +21,15 @@ struct connection_info_struct {
   struct MHD_PostProcessor *postprocessor;
 };
 
-const char *askpage = "<html><body>\
-                       Input: <br />\
-                       <form action=\"/\" method=\"post\">\
-                        <input name=\"input\" type=\"text\">\
-                        <input type=\"submit\" value=\"Send\"></form>\
-                       </body></html>";
+//const char *askpage = "<html><body>\
+//                       Input: <br />\
+//                       <form action=\"/\" method=\"post\">\
+//                        <input name=\"input\" type=\"text\">\
+//                        <input type=\"submit\" value=\"Send\"></form>\
+//                       </body></html>";
+//
+
+const char *askpage = "Nothing here, please issue a POST request of type application/json";                       
 
 const char *outputpage = "%s";
 
@@ -122,12 +125,16 @@ static int answer_to_connection(void *cls, struct MHD_Connection *connection, co
       con_info->outputstring = NULL;
 
       if (strcmp(method, "POST") == 0) {
-          con_info->postprocessor = MHD_create_post_processor(connection, POSTBUFFERSIZE, iterate_post, (void *) con_info);
 
+          //reenable for application/x-www-form-urlencoded
+          
+          /*
+          con_info->postprocessor = MHD_create_post_processor(connection, POSTBUFFERSIZE, iterate_post, (void *) con_info);
+          
           if (NULL == con_info->postprocessor) {
               free(con_info);
               return MHD_NO;
-            }
+          }*/
 
           con_info->connectiontype = POST;
       } else {
@@ -152,7 +159,14 @@ static int answer_to_connection(void *cls, struct MHD_Connection *connection, co
     } else if (strcmp(method,"POST") == 0) {
         struct connection_info_struct *con_info = *con_cls;
         if (*upload_data_size != 0) {
-            MHD_post_process(con_info->postprocessor, upload_data, *upload_data_size);
+
+            //MHD_post_process(con_info->postprocessor, upload_data, *upload_data_size);
+
+            printf("INPUT=[%s] (%d)",upload_data, (int) *upload_data_size);
+            char * outputstring;
+            outputstring = malloc(MAXOUTPUTSIZE);
+            int ret = process(upload_data, outputstring);
+            if (ret > 0) con_info->outputstring = outputstring;
             *upload_data_size = 0;
             return MHD_YES;
         } else if (con_info->outputstring != NULL) {          
