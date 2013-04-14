@@ -88,7 +88,11 @@ static int iterate_post(void *coninfo_cls, enum MHD_ValueKind kind, const char *
 		  
 		  int ret = process(data, outputstring);
 		  		  
-          if (ret > 0) con_info->outputstring = outputstring;
+          if (ret > 0) {
+            con_info->outputstring = outputstring;
+          } else {
+            con_info->outputstring = NULL;
+          }
       } else {
         con_info->outputstring = NULL;
       }
