@@ -110,7 +110,7 @@ static void request_completed(void *cls, struct MHD_Connection *connection, void
     return;
 
   if (con_info->connectiontype == POST) {
-      MHD_destroy_post_processor(con_info->postprocessor);
+      //MHD_destroy_post_processor(con_info->postprocessor);
       if (con_info->outputstring) free(con_info->outputstring);
     }
 
