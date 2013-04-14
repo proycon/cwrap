@@ -103,7 +103,7 @@ static int iterate_post(void *coninfo_cls, enum MHD_ValueKind kind, const char *
   return MHD_YES;
 }
 
-static void request_completed (void *cls, struct MHD_Connection *connection, void **con_cls, enum MHD_RequestTerminationCode toe) {
+static void request_completed(void *cls, struct MHD_Connection *connection, void **con_cls, enum MHD_RequestTerminationCode toe) {
   struct connection_info_struct *con_info = *con_cls;
 
   if (NULL == con_info)
@@ -156,7 +156,9 @@ static int answer_to_connection(void *cls, struct MHD_Connection *connection, co
             char * output;
             output = malloc(MAXOUTPUTSIZE);
             int ret = statusreport(output);
-            return send_page(connection, output, MHD_HTTP_OK);
+            int ret2 = send_page(connection, output, MHD_HTTP_OK);
+            free(output);
+            return ret;
         } else {
             return send_page(connection, askpage, MHD_HTTP_OK);
         }
@@ -186,7 +188,7 @@ static int answer_to_connection(void *cls, struct MHD_Connection *connection, co
 int main () {
   struct MHD_Daemon *daemon;
 
-  daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, PORT, NULL, NULL, &answer_to_connection, NULL, MHD_OPTION_END);
+  daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, PORT, NULL, NULL, &answer_to_connection, NULL, MHD_OPTION_NOTIFY_COMPLETED, &request_completed, NULL, MHD_OPTION_END);
                              
   if (daemon == NULL) return 1;
 
