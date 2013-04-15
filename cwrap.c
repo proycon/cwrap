@@ -169,7 +169,7 @@ static int answer_to_connection(void *cls, struct MHD_Connection *connection, co
 
             //MHD_post_process(con_info->postprocessor, upload_data, *upload_data_size);
 
-            printf("INPUT=[%s] (%d)",upload_data, (int) *upload_data_size);
+            printf("INPUT=[%s] (%d)\n",upload_data, (int) *upload_data_size);
             char * outputstring;
             outputstring = malloc(MAXOUTPUTSIZE);
             int ret = process(upload_data, outputstring);
