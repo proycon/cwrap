@@ -56,7 +56,8 @@ int process(const char * input, char * output) {
 		*p = toupper(*i);
 		p++;
 		i++;		
-	}	   
+	}	  
+    *p = '\0';
     return (p - output);
 }
 
