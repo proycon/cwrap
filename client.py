@@ -7,7 +7,7 @@ URL = "http://localhost:8888"
 
 def client(tweettext):
     #data = urllib.urlencode({'input': tweettext})
-    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+    headers = {"Content-type": "text/plain", "Accept": "text/plain"}
     request = urllib2.Request(URL, "Dit is een test")
     response = urllib2.urlopen(request)
     return response.read()
