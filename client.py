@@ -16,7 +16,8 @@ def client(tweettext):
 
 for i, line in enumerate(iter(sys.stdin.readline, '')):
     line = line.strip()
-    print "Sent     #" +str(i) + ": \"" + line + "\""
-    print "Received #" + str(i) + ": \"" + client(line) + "\""
+    if line: #don't sent empty lines, can't send empty data to server
+        print "Sent     #" +str(i) + ": \"" + line + "\""
+        print "Received #" + str(i) + ": \"" + client(line) + "\""
 
 
