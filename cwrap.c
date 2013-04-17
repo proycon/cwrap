@@ -189,7 +189,9 @@ static int answer_to_connection(void *cls, struct MHD_Connection *connection, co
 int main () {
   struct MHD_Daemon *daemon;
 
-  daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, PORT, NULL, NULL, &answer_to_connection, NULL, MHD_OPTION_NOTIFY_COMPLETED, &request_completed, NULL, MHD_OPTION_END);
+
+  const int threads = 10; //set to something > 1 to enable thread pooling
+  daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, PORT, NULL, NULL, &answer_to_connection, NULL, MHD_OPTION_NOTIFY_COMPLETED, &request_completed, NULL, MHD_OPTION_THREAD_POOL_SIZE, threads, NULL, MHD_OPTION_END);
                              
   if (daemon == NULL) return 1;
 
